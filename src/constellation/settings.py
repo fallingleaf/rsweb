@@ -25,8 +25,7 @@ SECRET_KEY = 'txmovxzc$w3lnk&ajjcjm_4qvctv@o2od$so-m&x8i!5t_=by='
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -37,8 +36,17 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+    # user app
+    'api',
     'jupiter',
+    # third party
+    'crispy_forms',
+    'rest_framework',
+    # auth api
+    'rest_framework.authtoken',
 )
+
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -56,14 +64,14 @@ ROOT_URLCONF = 'constellation.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, "templates")],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
+                'django.contrib.messages.context_processors.messages'
             ],
         },
     },
@@ -88,7 +96,6 @@ DATABASES = {
 
 # Authentication customization
 AUTH_USER_MODEL = 'jupiter.AuthUser'
-AUTHENTICATION_BACKENDS = 'jupiter.auth.AuthBackend'
 
 
 # Internationalization
@@ -108,8 +115,55 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
+PROJ_DIR = os.path.dirname(BASE_DIR)
+
 STATIC_URL = '/static/'
 
-TEMPLATE_DIRS = (
-    os.path.join(BASE_DIR,  'templates'),
+STATIC_ROOT = os.path.join(PROJ_DIR, "staticfiles", "web")
+
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, "static"),
 )
+
+# Uploaded media files
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(PROJ_DIR, "staticfiles", "media")
+
+# Authentication
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_REQUIRED = True
+#LOGIN_URL = '/login'
+LOGIN_REDIRECT_URL = '/'
+
+# Form
+
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
+
+# memcached
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': '127.0.0.1:11211',
+    }
+}
+
+# Rest framework
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.AllowAny',
+    ),
+}
+
+# Domain
+DOMAIN = 'example.com'
+SITE_NAME = 'CAT'
+SITE_ID = 1
+
