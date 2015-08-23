@@ -17,10 +17,11 @@ class UserSerializer(serializers.ModelSerializer):
         read_only_fields = ('email',)
 
 class SignUpSerializer(serializers.Serializer):
-    email = serializers.EmailField()
-    username = serializers.CharField(max_length=128)
+    email     = serializers.EmailField()
+    username  = serializers.CharField(max_length=128)
     password1 = serializers.CharField(max_length=128)
     password2 = serializers.CharField(max_length=128)
+
 
     def validate_password2(self, value):
         passwd1 = self.initial_data['password1']
@@ -53,4 +54,3 @@ class SignUpSerializer(serializers.Serializer):
         user.role = UserModel.USER_ROLE
         user.save()
         return user
-
