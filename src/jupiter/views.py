@@ -18,7 +18,7 @@ class SignUpView(SuccessMessageMixin, CreateView):
         return self.success_message
 
 def home(request):
-    return render(request, 'home.html', {})
+    return render(request, 'index.html', {})
 
 def handler403(request):
     return render(request, 'error/403.html', {})
