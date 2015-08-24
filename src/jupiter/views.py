@@ -3,7 +3,7 @@ from django.views.generic.edit import CreateView
 from django.contrib.messages.views import SuccessMessageMixin
 from models import AuthUser
 from forms import AuthUserCreationForm
-from decorators import allow
+from helpers.decorators import allow
 
 # Create your views here.
 class SignUpView(SuccessMessageMixin, CreateView):
