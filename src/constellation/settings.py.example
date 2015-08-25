@@ -117,7 +117,7 @@ USE_TZ = True
 
 PROJ_DIR = os.path.dirname(BASE_DIR)
 
-STATIC_URL = '/static/'
+STATIC_URL = '/web/'
 
 STATIC_ROOT = os.path.join(PROJ_DIR, "staticfiles", "web")
 
