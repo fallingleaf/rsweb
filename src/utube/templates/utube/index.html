@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="center-block">
+        <h1>Video Recommendation System</h1>
+        <hr/>
+        <div class="video-container">
+            <p> <b>Recommended </b></p>
+            {% for video in videos %}
+            <div class='video'>
+                <a href="{{ video.video_url }}" target="_blank">
+                    <img src="{{ video.thumbnail_url }}" alt='thumbnail'/>
+                    <p>{{ video.title|truncatechars:"50" }}</p>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

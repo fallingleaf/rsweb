@@ -81,9 +81,12 @@ class AuthUser(AbstractBaseUser):
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
+    
 
     def get_full_name(self):
         return self.first_name + " " + self.last_name
+    
+    full_name = property(get_full_name)
 
     def get_short_name(self):
         return self.username

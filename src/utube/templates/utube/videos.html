@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="center-block">
+        <h1>Youtube video statistics</h1>
+        <div class='statistic'>
+            <h2>Number of videos: {{total}}</h2>
+            {% for video in videos %}
+            <p>{{ video.0 }} - {{ video.1 }}</span></p>
+            {% endfor %}
+        </div>
+        <form method='post'>
+            {% csrf_token %}
+            <input type='submit' class='btn btn-primary' value='Crawl Video'>
+        </form>
+    </div>
+{% endblock %}
