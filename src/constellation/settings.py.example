@@ -40,6 +40,7 @@ INSTALLED_APPS = (
     # user app
     'api',
     'jupiter',
+    'utube',
     # third party
     'crispy_forms',
     'rest_framework',
@@ -133,9 +134,12 @@ MEDIA_ROOT = os.path.join(PROJ_DIR, "staticfiles", "media")
 # Authentication
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_REQUIRED = True
-#LOGIN_URL = '/login'
-LOGIN_REDIRECT_URL = '/'
-
+LOGIN_URL = '/login'
+#LOGIN_REDIRECT_URL = '/'
+# YOUTUBE
+DEVELOPER_KEY = "AIzaSyB2RmUIqOkeeIzgs3CKKX9GE0NrZrB421c"
+YOUTUBE_API_SERVICE_NAME = "youtube"
+YOUTUBE_API_VERSION = "v3"
 # Form
 
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
@@ -163,7 +167,7 @@ REST_FRAMEWORK = {
 }
 
 # Domain
-DOMAIN = 'example.com'
+DOMAIN = 'tamhoangnguyen.com'
 SITE_NAME = 'CAT'
 SITE_ID = 1
 
