@@ -87,9 +87,9 @@ WSGI_APPLICATION = 'constellation.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'omega',
-        'USER': 'rosary',
-        'PASSWORD': '05021988',
+        'NAME': 'orion',
+        'USER': 'orion',
+        'PASSWORD': 'orion',
         'HOST': '127.0.0.1',
         'PORT': '5432',
     }
@@ -135,11 +135,12 @@ MEDIA_ROOT = os.path.join(PROJ_DIR, "staticfiles", "media")
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_REQUIRED = True
 LOGIN_URL = '/login'
-#LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/'
 # YOUTUBE
 DEVELOPER_KEY = "AIzaSyB2RmUIqOkeeIzgs3CKKX9GE0NrZrB421c"
 YOUTUBE_API_SERVICE_NAME = "youtube"
 YOUTUBE_API_VERSION = "v3"
+YOUTUBE_REDIRECT_URI = 'http://www.tamhoangnguyen.me/utube/callback'
 # Form
 
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
