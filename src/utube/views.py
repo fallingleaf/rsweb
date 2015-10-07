@@ -20,12 +20,11 @@ from oauth2client.django_orm import Storage
 CLIENT_SECRETS = os.path.join(os.path.dirname(__file__), '..', 'client_secret.json')
 
 YOUTUBE_SCOPE = 'https://www.googleapis.com/auth/youtube'
-REDIRECT_URI = 'http://localhost:8000/utube/callback'
 MAX_RESULTS = 50
 
 FLOW = flow_from_clientsecrets(CLIENT_SECRETS, 
         scope=YOUTUBE_SCOPE, 
-        redirect_uri=REDIRECT_URI
+        redirect_uri=settings.YOUTUBE_REDIRECT_URI
         )
 FLOW.params['access_type'] = 'offline'
 
