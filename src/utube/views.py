@@ -78,6 +78,7 @@ def update_user_infos(user, service):
     ids = list(set(ids))
     num = MAX_RESULTS
     partition = [ids[i*num : (i + 1)*num] for i in range(len(ids)/num + 1)]
+    video_details = []
     for p in partition:
         id_str = ','.join(p)
         if id_str:
@@ -86,7 +87,9 @@ def update_user_infos(user, service):
                 id=id_str,
                 maxResults=num
             ).execute()
-            store_videos(res.get('items', []))
+            video_details.extend(res.get('items', []))
+    
+    store_videos(video_details)
     
     
 @login_required
