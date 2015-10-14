@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load staticfiles %}
 {% block content %}
     <div class="center-block">
         <h1>Youtube video statistics</h1>
@@ -9,9 +9,7 @@
             <p>{{ video.0 }} - {{ video.1 }}</span></p>
             {% endfor %}
         </div>
-        <form method='post'>
-            {% csrf_token %}
-            <input type='submit' class='btn btn-primary' value='Crawl Video'>
-        </form>
+        <button class="crawl-btn btn btn-primary">Crawl Video </button>
     </div>
+    <script type="text/javascript" src="{% static 'js/utube.js' %}"> </script>
 {% endblock %}

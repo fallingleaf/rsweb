@@ -4,8 +4,18 @@
     <div class="center-block">
         <h1>Video Recommendation System</h1>
         <hr/>
+        {% if login_url %}
+        <div class="auth">
+            <a href='{{login_url}}' class="btn btn-primary">Login with Youtube </a>
+        </div>
+        {% endif %}
+        {% if videos %}
         <div class="video-container">
-            <p> <b>Recommended </b></p>
+            <p> 
+                <b>Watch History </b> 
+                <a href='/utube/recommend' class="btn btn-warning btn-sm">View Recommendation</a>
+            </p>
+            
             {% for video in videos %}
             <div class='video'>
                 <a href="{{ video.video_url }}" target="_blank">
@@ -14,6 +24,8 @@
                 </a>
             </div>
             {% endfor %}
+            
         </div>
+        {% endif %}
     </div>
 {% endblock %}

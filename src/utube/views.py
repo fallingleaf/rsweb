@@ -2,13 +2,14 @@ import os
 import httplib2
 
 from django.db.models import Count
-from django.http import HttpResponseBadRequest
+from django.http import HttpResponseBadRequest, JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from constellation import settings
 from utube.models import CredentialsModel, Video, UserVideo, VideoCategory
 from utube.utils import store_videos
 from utube.crawler import crawl_video
+from utube.classifier import predict
 from jupiter.models import AuthUser
 from jupiter.decorators import allow
 
@@ -37,15 +38,16 @@ def get_user_videos(service):
     playlist_ids = []
     for channel in response.get('items', []):
         playlists = channel['contentDetails']['relatedPlaylists']
-        if playlists:
-            playlist_ids.extend(playlists.items())
+        for plname, plid in playlists.items():
+            #if plname in ('likes', 'favorites'):
+            playlist_ids.append((plid, plname))
     
-    # Playlist name: likes, favorites, uploads, watchHistory, watchLater
-    for (plname, plid) in playlist_ids:
+    # Playlist name: likes, favorites
+    for plid, plname in playlist_ids:
         item_req = service.playlistItems().list(
             playlistId=plid,
             part='contentDetails',
-            maxResults=50
+            maxResults=MAX_RESULTS
         )
         while item_req:
             response = item_req.execute()
@@ -58,14 +60,20 @@ def get_user_videos(service):
 
 def store_user_videos(user, videos):
     def make_record(inst):
-        vid, plname = inst
-        if plname == 'likes':
-            return UserVideo(user=user, video_id=vid, is_like=True)
-        if plname == 'favorites':
-            return UserVideo(user=user, video_id=vid, is_favorite=True)
-        return UserVideo(user=user, video_id=vid)
-    
-    records = map(make_record, videos)
+        vid, attrs = inst
+        return UserVideo(user=user, video_id=vid, 
+                        is_like=attrs.get('likes', False), 
+                        is_favorite=attrs.get('favorites', False)
+                        )
+        
+    agg = {}
+    for vid, plname in videos:
+        if agg.get(vid, None):
+            agg[vid][plname] = True
+        else:
+            agg[vid] = {plname: True}
+        
+    records = map(make_record, agg.items())
     UserVideo.objects.bulk_create(records)
     
     
@@ -100,7 +108,7 @@ def index(request):
         FLOW.params['state'] = xsrfutil.generate_token(settings.SECRET_KEY,
                                 request.user)
         authorize_url = FLOW.step1_get_authorize_url()
-        return redirect(authorize_url)
+        return render(request, 'utube/index.html', {'login_url': authorize_url})
     else:
         user = AuthUser.objects.get(pk=request.user.id)
         video_count = user.uservideo_set.count()
@@ -140,14 +148,19 @@ def videos(request):
         statistics[cv['category_id']] = cv['videos']
     for ct in categories:
         num_videos.append((ct.title, statistics.get(ct.youtube_id, 0)))
-    print num_videos
     if request.method == 'POST':
         Video.objects.all().delete()
         VideoCategory.objects.all().delete()
         crawl_video()
-        return redirect('/utube/videos')
+        return JsonResponse(dict(success=True), status=200)
+        
     return render(request, 'utube/videos.html', dict(total=total, 
         videos=num_videos))
         
 
+@login_required
+def recommend(request):
+    user = request.user
+    videos = predict(user)
+    return render(request, 'utube/recommend.html', dict(videos=videos))
 
