@@ -14,6 +14,7 @@ from jupiter.models import AuthUser
 from jupiter.decorators import allow
 
 from apiclient.discovery import build
+from apiclient import errors
 from oauth2client import xsrfutil
 from oauth2client.client import flow_from_clientsecrets
 from oauth2client.django_orm import Storage
@@ -30,20 +31,19 @@ FLOW = flow_from_clientsecrets(CLIENT_SECRETS,
 FLOW.params['access_type'] = 'offline'
 
 def get_user_videos(service):
-    response = service.channels().list(
-        part='contentDetails',
+    response = service.playlists().list(
+        part='id,snippet',
         mine=True,
         maxResults=MAX_RESULTS
     ).execute()
-    playlist_ids = []
-    for channel in response.get('items', []):
-        playlists = channel['contentDetails']['relatedPlaylists']
-        for plname, plid in playlists.items():
-            #if plname in ('likes', 'favorites'):
-            playlist_ids.append((plid, plname))
+    ids = []
+    for playlist in response.get('items', []):
+        ids.append((playlist['id'], playlist['snippet']['title']))
     
     # Playlist name: likes, favorites
-    for plid, plname in playlist_ids:
+    for plid, plname in ids:
+        print "get video for playlist %s %s" %(plname, plid)
+        videos = None
         item_req = service.playlistItems().list(
             playlistId=plid,
             part='contentDetails',
@@ -51,19 +51,21 @@ def get_user_videos(service):
         )
         while item_req:
             response = item_req.execute()
-            for video in response.get('items', []):
+            videos = response.get('items', [])
+            for video in videos:
                 yield (video['contentDetails']['videoId'], plname)
             item_req = service.playlistItems().list_next(
                 item_req, response
-            )
+                )
+            
 
 
 def store_user_videos(user, videos):
     def make_record(inst):
         vid, attrs = inst
         return UserVideo(user=user, video_id=vid, 
-                        is_like=attrs.get('likes', False), 
-                        is_favorite=attrs.get('favorites', False)
+                        is_like=attrs.get('Likes', False), 
+                        is_favorite=attrs.get('Favorites', False)
                         )
         
     agg = {}
@@ -112,17 +114,18 @@ def index(request):
     else:
         user = AuthUser.objects.get(pk=request.user.id)
         video_count = user.uservideo_set.count()
+        if not video_count:
+            http = httplib2.Http()
+            http = credential.authorize(http)
+            service = build('youtube', 'v3', http=http)
+            update_user_infos(user, service)
+            
         videos = Video.objects.raw(
             '''
             SELECT DISTINCT v.* FROM utube_video v LEFT JOIN utube_uservideo uv 
             ON uv.video_id = v.youtube_id 
             WHERE uv.user_id = %s
             ''', [user.id])
-        if not video_count:
-            http = httplib2.Http()
-            http = credential.authorize(http)
-            service = build('youtube', 'v3', http=http)
-            update_user_infos(user, service)
         return render(request, 'utube/index.html', {'videos':videos})
 
 @login_required
@@ -162,5 +165,11 @@ def videos(request):
 def recommend(request):
     user = request.user
     videos = predict(user)
+    if not videos:
+        q = Video.objects.raw('''
+        SELECT DISTINCT * FROM utube_video ORDER BY view_count DESC, like_count DESC LIMIT 20
+        ''')
+        videos = [(v.youtube_id, v.title, v.thumbnail_url) for v in q]
+        videos = set(videos)
     return render(request, 'utube/recommend.html', dict(videos=videos))
 

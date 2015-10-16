@@ -12,36 +12,6 @@ def dictfetchall(cursor):
     ]
     
 
-def discretize_data(d):
-    r = []
-    r.append(d[0])
-    if d[1] >= 1000000:
-        r.append(1)
-    else:
-        r.append(0)
-    if d[2] >= 100000:
-        r.append(1)
-    else:
-        r.append(0)
-    if d[3] >= 100000:
-        r.append(1)
-    else:
-        r.append(0)
-    if d[4] >= 10000:
-        r.append(1)
-    else:
-        r.append(0)
-    if d[5] >= 10000:
-        r.append(1)
-    else:
-        r.append(0)
-    if d[6] is not None:
-        r.append(d[6])
-    else:
-        r.append(r[4])
-    return r
-        
-
 def build_classifier(user):
     data = []
     with connection.cursor() as cursor:
@@ -53,6 +23,8 @@ def build_classifier(user):
               ON v.youtube_id = uv.video_id WHERE uv.user_id = %s
         ''', [user.id])
         data = [list(x) for x in cursor.fetchall()]
+    if not data:
+        return None
     x = [d[:6] for d in data]
     y = [d[-1] for d in data]
     clf = tree.DecisionTreeClassifier()
@@ -76,10 +48,13 @@ def build_test_set():
 
 
 def predict(user):
+    result = []
     classifier = build_classifier(user)
+    if not classifier:
+        return result
     #print_tree(classifier)
     src, data = build_test_set()
-    result = []
+    
     target = 1
     for t in data[:50]:
         ps = classifier.predict(t)
