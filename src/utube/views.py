@@ -10,6 +10,7 @@ from utube.models import CredentialsModel, Video, UserVideo, VideoCategory
 from utube.utils import store_videos
 from utube.crawler import crawl_video
 from utube.classifier import predict
+from utube.tfidf import tfidf_classify
 from jupiter.models import AuthUser
 from jupiter.decorators import allow
 
@@ -164,12 +165,16 @@ def videos(request):
 @login_required
 def recommend(request):
     user = request.user
-    videos = predict(user)
-    if not videos:
+    videos = set(predict(user))
+    similar = set(tfidf_classify(user))
+    similar = similar.difference(videos)
+    if not videos and not similar:
         q = Video.objects.raw('''
         SELECT DISTINCT * FROM utube_video ORDER BY view_count DESC, like_count DESC LIMIT 20
         ''')
         videos = [(v.youtube_id, v.title, v.thumbnail_url) for v in q]
         videos = set(videos)
-    return render(request, 'utube/recommend.html', dict(videos=videos))
+    #print similar
+    return render(request, 'utube/recommend.html', dict(videos=list(videos)[:20],
+         similar=list(similar)[:20]))
 

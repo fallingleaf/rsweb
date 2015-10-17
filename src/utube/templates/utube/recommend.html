@@ -6,8 +6,23 @@
         <hr/>
         {% if videos %}
         <div class="video-container">
-            <p> <b>Recommended</b></p>
+            <p> <b>Videos you might like</b></p>
             {% for video in videos %}
+            <div class='video'>
+                <a href="http://www.youtube.com/watch?v={{ video.0 }}" target="_blank">
+                    <img src="{{ video.2 }}" alt='thumbnail'/>
+                    <p>{{ video.1|truncatechars:"50" }}</p>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        <hr/>
+        <div class="clearfix"></div>
+        {% if similar %}
+        <div class="video-container">
+            <p> <b>Similar videos to your watch history</b></p>
+            {% for video in similar %}
             <div class='video'>
                 <a href="http://www.youtube.com/watch?v={{ video.0 }}" target="_blank">
                     <img src="{{ video.2 }}" alt='thumbnail'/>
