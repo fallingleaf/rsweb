@@ -1,5 +1,7 @@
-from django.core.exceptions import PermissionDenied
 from functools import wraps
+
+from django.core.exceptions import PermissionDenied
+
 
 def allow(roles):
     def decorated(func):
@@ -9,5 +11,7 @@ def allow(roles):
                 if request.user.role in roles:
                     return func(request, *args, **kwargs)
             raise PermissionDenied
+
         return func_wrapper
+
     return decorated

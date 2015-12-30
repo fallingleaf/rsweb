@@ -15,5 +15,6 @@ def store_videos(videos):
             favorite_count=row['statistics'].get('favoriteCount', 0),
             comment_count=row['statistics'].get('commentCount', 0)
         )
+
     records = map(make_record, videos)
     Video.objects.bulk_create(records)

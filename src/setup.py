@@ -2,8 +2,8 @@
 from django.conf import settings
 from django.contrib.sites.models import Site
 
-class SiteConf(object):
 
+class SiteConf(object):
     def setup_site():
         site = Site.objects.get(domain=settings.DOMAIN)
         if not site:

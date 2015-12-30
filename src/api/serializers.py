@@ -1,14 +1,16 @@
 from rest_framework import serializers
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import get_user_model
-from django.db.models import Q
+from .tasks import send_message
 
 UserModel = get_user_model()
+
 
 class TokenSerializer(serializers.ModelSerializer):
     class Meta:
         model = Token
         fields = ('key',)
+
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -16,12 +18,27 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ('first_name', 'last_name', 'username', 'email')
         read_only_fields = ('email',)
 
+
+class ContactSerializer(serializers.Serializer):
+    name = serializers.CharField(max_length=128)
+    email = serializers.EmailField()
+    message = serializers.CharField()
+    
+    def save(self):
+        name = self.validated_data['name']
+        email = self.validated_data['email']
+        message = self.validated_data['message']
+        to = ['tamnghoang@gmail.com']
+        send_message(email, to, message, name)
+        return None
+        
+    
+    
 class SignUpSerializer(serializers.Serializer):
-    email     = serializers.EmailField()
-    username  = serializers.CharField(max_length=128)
+    email = serializers.EmailField()
+    username = serializers.CharField(max_length=128)
     password1 = serializers.CharField(max_length=128)
     password2 = serializers.CharField(max_length=128)
-
 
     def validate_password2(self, value):
         passwd1 = self.initial_data['password1']

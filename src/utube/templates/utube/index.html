@@ -5,27 +5,28 @@
         <h1>Video Recommendation System</h1>
         <hr/>
         {% if login_url %}
-        <div class="auth">
-            <a href='{{login_url}}' class="btn btn-primary">Login with Youtube </a>
-        </div>
+            <div class="auth">
+                <a href='{{ login_url }}' class="btn btn-primary">Connect Youtube account </a>
+            </div>
         {% endif %}
         {% if videos %}
-        <div class="video-container">
-            <p> 
-                <b>Watch History </b> 
-                <a href='/utube/recommend' class="btn btn-warning btn-sm">View Recommendation</a>
-            </p>
-            
-            {% for video in videos %}
-            <div class='video'>
-                <a href="{{ video.video_url }}" target="_blank">
-                    <img src="{{ video.thumbnail_url }}" alt='thumbnail'/>
-                    <p>{{ video.title|truncatechars:"50" }}</p>
-                </a>
+            <div class="video-container">
+                <p>
+                    <b>Watch History </b>
+                    <a href='/utube/recommend' class="btn btn-warning btn-sm pull-right">View Recommendation</a>
+                </p>
+
+                {% for video in videos %}
+                    <div class='video'>
+                        <a href="{{ video.video_url }}" target="_blank">
+                            <img src="{{ video.thumbnail_url }}" alt='thumbnail'/>
+
+                            <p>{{ video.title|truncatechars:"50" }}</p>
+                        </a>
+                    </div>
+                {% endfor %}
+
             </div>
-            {% endfor %}
-            
-        </div>
         {% endif %}
     </div>
 {% endblock %}

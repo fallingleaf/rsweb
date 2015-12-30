@@ -4,8 +4,8 @@
     <div class="center-block">
         <h1>Home page</h1>
         {% if user.is_authenticated %}
-        
-        <p>{{ user.role }}</p>
+
+            <p>{{ user.role }}</p>
         {% endif %}
     </div>
 {% endblock %}

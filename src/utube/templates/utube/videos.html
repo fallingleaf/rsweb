@@ -3,13 +3,14 @@
 {% block content %}
     <div class="center-block">
         <h1>Youtube video statistics</h1>
+        <hr/>
+        <button class="crawl-btn btn btn-primary pull-right">Crawl Video</button>
         <div class='statistic'>
-            <h2>Number of videos: {{total}}</h2>
+            <h2>Number of videos: {{ total }}</h2>
             {% for video in videos %}
-            <p>{{ video.0 }} - {{ video.1 }}</span></p>
+                <p>{{ video.0 }} - {{ video.1 }}</span></p>
             {% endfor %}
         </div>
-        <button class="crawl-btn btn btn-primary">Crawl Video </button>
     </div>
-    <script type="text/javascript" src="{% static 'js/utube.js' %}"> </script>
+    <script type="text/javascript" src="{% static 'js/utube.js' %}"></script>
 {% endblock %}

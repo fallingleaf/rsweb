@@ -1,6 +1,8 @@
 from django import forms
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
+
 from .models import AuthUser
+
 
 class AuthUserCreationForm(forms.ModelForm):
     password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
@@ -34,6 +36,7 @@ class AuthUserCreationForm(forms.ModelForm):
         if commit:
             user.save()
         return user
+
 
 class AuthUserChangeForm(forms.ModelForm):
     password = ReadOnlyPasswordHashField()

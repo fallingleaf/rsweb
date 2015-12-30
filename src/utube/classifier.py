@@ -1,16 +1,14 @@
-from utube.models import Video, UserVideo
 from django.db import connection
-import numpy
 from sklearn import tree
-import random
+
 
 def dictfetchall(cursor):
     columns = [col[0] for col in cursor.description]
     return [
         dict(zip(columns, row))
         for row in cursor.fetchall()
-    ]
-    
+        ]
+
 
 def build_classifier(user):
     data = []
@@ -30,7 +28,7 @@ def build_classifier(user):
     clf = tree.DecisionTreeClassifier()
     clf = clf.fit(x, y)
     return clf
-    
+
 
 def build_test_set():
     d = []
@@ -52,9 +50,9 @@ def predict(user):
     classifier = build_classifier(user)
     if not classifier:
         return result
-    #print_tree(classifier)
+    # print_tree(classifier)
     src, data = build_test_set()
-    
+
     target = 1
     for t in data[:50]:
         ps = classifier.predict(t)
@@ -62,15 +60,3 @@ def predict(user):
             idx = hash(tuple(t))
             result.append(src[idx])
     return result
-    
-
-    
-    
-        
-    
-    
-    
-    
-    
-    
-    

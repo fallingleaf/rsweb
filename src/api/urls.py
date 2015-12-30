@@ -1,5 +1,6 @@
-from django.conf.urls import patterns, url, include
+from django.conf.urls import url
 from rest_framework.urlpatterns import format_suffix_patterns
+
 from api import views
 
 urlpatterns = [
@@ -8,7 +9,8 @@ urlpatterns = [
     url(r'^auth/signup/$', views.signup, name='rest_signup'),
     url(r'^auth/login/$', views.LoginView.as_view(), name='rest_login'),
     url(r'^auth/logout/$', views.LogoutView.as_view(), name='rest_logout'),
-    #url(r'^auth/fb/$', views.FacebookLogin.as_view(), name='fb_login'),
+    url(r'^contact', views.contact, name='rest_contact'),
+    # url(r'^auth/fb/$', views.FacebookLogin.as_view(), name='fb_login'),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

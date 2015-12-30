@@ -1,6 +1,9 @@
 from django.db import models
+
 from oauth2client.django_orm import FlowField, CredentialsField
 from jupiter.models import AuthUser
+
+
 # Create your models here.
 
 class FlowModel(models.Model):
@@ -16,8 +19,8 @@ class CredentialsModel(models.Model):
 class VideoCategory(models.Model):
     youtube_id = models.IntegerField(unique=True)
     title = models.CharField(max_length=256)
-    
-    
+
+
 class Video(models.Model):
     youtube_id = models.CharField(max_length=128)
     title = models.TextField(blank=True)
@@ -33,7 +36,7 @@ class Video(models.Model):
 
     def _get_video_url(self):
         return "http://www.youtube.com/watch?v=%s" % (self.youtube_id,)
-    
+
     video_url = property(_get_video_url)
 
 

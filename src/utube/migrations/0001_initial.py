@@ -2,12 +2,12 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
-import oauth2client.django_orm
 from django.conf import settings
+
+import oauth2client.django_orm
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('jupiter', '0001_initial'),
     ]

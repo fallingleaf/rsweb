@@ -1,8 +1,9 @@
 from django.contrib import admin
-from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin
+
 from models import AuthUser
 from forms import AuthUserChangeForm, AuthUserCreationForm
+
 
 class AuthUserAdmin(UserAdmin):
     form = AuthUserChangeForm
@@ -27,6 +28,7 @@ class AuthUserAdmin(UserAdmin):
     ordering = ('username',)
     filter_horizontal = ()
 
+
 admin.site.register(AuthUser, AuthUserAdmin)
 
-#admin.site.unregister(Group)
+# admin.site.unregister(Group)

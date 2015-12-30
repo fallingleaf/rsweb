@@ -1,8 +1,7 @@
-from django.http import Http404
 from django.conf import settings
 from django.contrib.auth import login, logout
 from rest_framework import status
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import generics
@@ -10,7 +9,7 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework.authtoken.models import Token
 
-from serializers import UserSerializer, SignUpSerializer, TokenSerializer
+from serializers import UserSerializer, SignUpSerializer, TokenSerializer, ContactSerializer
 from jupiter.models import AuthUser
 
 
@@ -21,10 +20,12 @@ class UserList(generics.ListCreateAPIView):
     queryset = AuthUser.objects.all()
     serializer_class = UserSerializer
 
+
 class UserDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (IsAuthenticated,)
     queryset = AuthUser.objects.all()
     serializer_class = UserSerializer
+
 
 @api_view(['POST'])
 def signup(request, format=None):
@@ -34,6 +35,14 @@ def signup(request, format=None):
         serializer.save()
         return Response(response_serializer(serializer.data).data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['POST'])
+def contact(request, format=None):
+    serializer = ContactSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(dict(message="Thank you for contacting me!"), status=status.HTTP_200_OK)
+    return Response(serializer.error, status=status.HTTP_400_BAD_REQUEST)
 
 class LoginView(generics.GenericAPIView):
     """
@@ -72,6 +81,7 @@ class LoginView(generics.GenericAPIView):
         self.login()
         return self.get_response()
 
+
 class LogoutView(APIView):
     permission_classes = (AllowAny,)
 
@@ -85,7 +95,6 @@ class LogoutView(APIView):
 
         return Response({"success": "Successfully logged out."},
                         status=status.HTTP_200_OK)
-
 
 # class FacebookLogin(SocialLogin):
 #     adapter_class = FacebookOAuth2Adapter
@@ -176,4 +185,3 @@ class LogoutView(APIView):
 #     elif request.method == 'DELETE':
 #         user.delete()
 #         return Response(status=status.HTTP_204_NO_CONTENT)
-
