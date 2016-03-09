@@ -30,10 +30,10 @@
 - `python manage.py test`
 
 *API List*
-- Submit event:     http://localhost:8000/nationbuilder/events
-- List event:       http://localhost:8000/nationbuilder/events?from=2016-03-09T00:00:00Z&to=2016-03-10T00:00:00Z
-- Clear data:       http://localhost:8000/nationbuilder/events/clear
-- Event summary:    http://localhost:8000/nationbuilder/events/summary?from=2016-03-09T00:00:00Z&to=2016-03-10T00:00:00Z&by=hour
+- Submit event: `http://localhost:8000/nationbuilder/events`
+- List event: `http://localhost:8000/nationbuilder/events?from=2016-03-09T00:00:00Z&to=2016-03-10T00:00:00Z`
+- Clear data: `http://localhost:8000/nationbuilder/events/clear`
+- Event summary:    `http://localhost:8000/nationbuilder/events/summary?from=2016-03-09T00:00:00Z&to=2016-03-10T00:00:00Z&by=hour`
 
 *Notes:*
 - To test against server API using `curl`for example: `curl ­H  "Content­Type: application/json" ­X  POST ­d ' {"date": "2016-03­-09T09:00:00Z", "user": "Doc", "type": "enter"} '  http://localhost:8000/nationbuilder/events`
