@@ -1,3 +1,4 @@
+from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.generic.edit import CreateView
 from django.contrib.messages.views import SuccessMessageMixin
@@ -24,12 +25,12 @@ def home(request):
 
 
 def handler403(request):
-    return render(request, 'error/403.html', {})
+    return JsonResponse({'status': 'error'}, status=403)
 
 
 def handler404(request):
-    return render(request, 'error/404.html', {})
+    return JsonResponse({'status': 'error'}, status=404)
 
 
 def handler500(request):
-    return render(request, 'error/500.html', {})
+    return JsonResponse({'status': 'error'}, status=500)

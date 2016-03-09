@@ -16,7 +16,7 @@ urlpatterns = [
     # nation builder routing
     url(r'^nationbuilder/', include('nationbuilder.urls')),
     # utube routing
-    url(r'^utube/', include('utube.urls')),
+    #url(r'^utube/', include('utube.urls')),
 ]
 
 if settings.DEBUG:
