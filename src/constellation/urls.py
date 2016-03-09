@@ -13,6 +13,8 @@ urlpatterns = [
     url(r'^logout/$', 'django.contrib.auth.views.logout', {'next_page': '/'}, name='logout'),
     # api routing
     url(r'^api/', include('api.urls')),
+    # nation builder routing
+    url(r'^nationbuilder/', include('nationbuilder.urls')),
     # utube routing
     url(r'^utube/', include('utube.urls')),
 ]

@@ -2,6 +2,12 @@
 
 ##Deloyment instruction##
 
+*Requirements:*
+- Python 2.7.11
+- Django 1.8.3
+- Django Rest Framework 3.1.3
+- PostgreSQL 9.4
+
 *Setup virtual environment*
 - Install virtualenv `pip install virtualenv`
 - Set project environment `virtualenv .`
@@ -9,27 +15,21 @@
 - Install necessary packages `pip install -r requirement.txt`
 
 *Configure project*
-- Change directory to `src`
+- Change directory to `cd src`
 - Copy sample settings `cp settings.py.example settings.py`
 - Update database connection dbname, username, password in setting file
-- Update Youtube API key to your key
 
 *Migration*
 - Run database migration `python manage.py migrate`
 
-*Add admin account*
-- `python manage.py createsuperuer` and follow instruction to add admin user
-- Using admin interface, user can add one or more accounts for testing purpose `localhost:8000/admin`
-
 *Run server*
-- `python manange.py runserver`
+- `python manange.py runserver` or `python manage.py runserver [port-number]`
+- Open browser and navigate to: http://localhost:8000/. The website will display portfolio page.
 
-*Craw youtube data*
-- Navigate to website (on your localhost): `localhost:8000/utube/videos`
-
-*Test user's video page*
-- `localhost:8000/utube` (this page requires login and links account to youtube)
+*Run tests*
+- `python manage.py test`
 
 *Notes:*
-- Server uses default credentials from **client_secret.json**, you can generate your own credentials using google developer console.
-- As you might use different domain, config your Google oauth to use different callback uri, and YOUTUBE_REDIRECT_URI in setting file
+- Server API is located at url: http://localhost:8000/nationbuilder
+- To test against server API using `curl`for example: `curl ­H  "Content­Type: application/json" ­X  POST ­d ' {"date": "2016-03­-09T09:00:00Z", "user": "Doc", "type": "enter"} '  http://localhost:8000/nationbuilder/events`
+- Sample server: http://tamhoangnguyen.me/
