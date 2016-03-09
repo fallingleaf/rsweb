@@ -20,7 +20,7 @@ def event_list(request):
         from_date = dbtime(request.query_params['from'])
         to_date = dbtime(request.query_params['to'])
         events = Event.objects.filter(event_date__lte=to_date,
-                                    event_date__gte=from_date)
+                                    event_date__gte=from_date).order_by('event_date')
         eserializers = EventSerializer(events, many=True)
         return Response({'events': eserializers.data})
     
